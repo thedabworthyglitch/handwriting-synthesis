@@ -2,6 +2,8 @@ import numpy as np
 from handwriting_synthesis import Hand
 import random
 from textwrap import wrap
+from cairosvg import svg2pdf
+from PyPDF4 import PdfFileMerger
 
 styles = []
 biases = []
@@ -30,19 +32,18 @@ def splitter(text, max_length = 90):
             lines.extend(wr)
     return lines
 
-def htmlConverter(filename, files):
-    html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head><title>{filename}</title></head>
-    <body>
-        <style>img{{width:100%;height:auto;}}</style>
-        {"".join([f'<img src="{file}" alt="{filename}" />' for file in files])}
-    </body>
-    </html>
-    """
-    with open(f'img/{filename}.html', 'w') as f:
-        f.write(html)
+def pdfConverter(filenames):
+    pdfFiles = []
+    for file in filenames:
+        pdfFiles.append(f"img/dist/{file}.pdf")
+        svg2pdf(url=f"img/dist/{file}.svg", write_to=pdfFiles[-1])
+    merger = PdfFileMerger(strict=False)
+    for pdf in pdfFiles:
+        merger.append(fileobj=open(pdf, 'rb'))
+    merger.write(f"img/{filenames[1].split('-pg')[0]}.pdf")
+    merger.close()
+
+
 
 arr_splitter = lambda arr, size: [arr[x:x+size] for x in range(0, len(arr), size)]
 linesPerPage = 40
@@ -62,13 +63,13 @@ if __name__ == '__main__':
             lines_sp = arr_splitter(lines, linesPerPage)
             filenames = []
             for k, line_pg in enumerate(lines_sp):
-                filenames.append(f'usage_demo_st{i}_bias{j}-pg{k}.svg')
+                filenames.append(f'st{i}_bias{j}-pg{k}')
                 hand.write(
-                    filename=f"img/{filenames[-1]}",
+                    filename=f"img/dist/{filenames[-1]}.svg",
                     lines=line_pg,
                     biases=[j] * len(line_pg),
                     styles=[i] * len(line_pg),
                     stroke_widths=[stroke_width + random.choice([-0.1, -0.05, 0, 0.05, 0.1]) for _ in range(len(lines))],
                     alignCenter=False
                 )
-            htmlConverter(f"usage_demo_st{i}_bias{j}", filenames)
+            pdfConverter(filenames)

@@ -10,3 +10,5 @@ predictions
 venv
 __pycache__
 /_main.py
+img/*.pdf
+img/dist/*
