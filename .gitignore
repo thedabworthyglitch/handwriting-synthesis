@@ -8,6 +8,6 @@ predictions
 
 .idea
 venv
-img
+img/dist/*
 __pycache__
 /_main.py

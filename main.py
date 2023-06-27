@@ -29,6 +29,21 @@ def splitter(text, max_length = 90):
         else:
             lines.extend(wr)
     return lines
+
+def htmlConverter(filename, files):
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head><title>{filename}</title></head>
+    <body>
+        <style>img{{width:100%;height:auto;}}</style>
+        {"".join([f'<img src="{file}" alt="{filename}" />' for file in files])}
+    </body>
+    </html>
+    """
+    with open(f'img/{filename}.html', 'w') as f:
+        f.write(html)
+
 arr_splitter = lambda arr, size: [arr[x:x+size] for x in range(0, len(arr), size)]
 linesPerPage = 40
 
@@ -45,12 +60,15 @@ if __name__ == '__main__':
             print(f"==========================================================================================")
             stroke_width = random.choice([1,1.05,1.1,1.15,1.2,1.25,1.3,1.35,1.4,1.45,1.5])
             lines_sp = arr_splitter(lines, linesPerPage)
+            filenames = []
             for k, line_pg in enumerate(lines_sp):
+                filenames.append(f'usage_demo_st{i}_bias{j}-pg{k}.svg')
                 hand.write(
-                    filename=f'img/usage_demo_st{i}_bias{j}-pg{k}.svg',
+                    filename=f"img/{filenames[-1]}",
                     lines=line_pg,
                     biases=[j] * len(line_pg),
                     styles=[i] * len(line_pg),
                     stroke_widths=[stroke_width + random.choice([-0.1, -0.05, 0, 0.05, 0.1]) for _ in range(len(lines))],
                     alignCenter=False
                 )
+            htmlConverter(f"usage_demo_st{i}_bias{j}", filenames)
