@@ -1,14 +1,15 @@
 import numpy as np
 import svgwrite
+import random
 
 from handwriting_synthesis import drawing
 
 
-def _draw(strokes, lines, filename, stroke_colors=None, stroke_widths=None):
+def _draw(strokes, lines, filename, stroke_colors=None, stroke_widths=None, alignCenter=True):
     stroke_colors = stroke_colors or ['black'] * len(lines)
     stroke_widths = stroke_widths or [2] * len(lines)
 
-    line_height = 60
+    line_height = 35
     view_width = 1000
     view_height = line_height * (len(strokes) + 1)
 
@@ -30,7 +31,11 @@ def _draw(strokes, lines, filename, stroke_colors=None, stroke_widths=None):
 
         strokes[:, 1] *= -1
         strokes[:, :2] -= strokes[:, :2].min() + initial_coord
-        strokes[:, 0] += (view_width - strokes[:, 0].max()) / 2
+        if alignCenter:
+            strokes[:, 0] += (view_width - strokes[:, 0].max()) / 2
+        else:
+            strokes[:, 0] += (view_width + random.randint(-15, 15) - strokes[:, 0].min())
+            # strokes[:, 0] += random.randint(10, 50)
 
         prev_eos = 1.0
         p = "M{},{} ".format(0, 0)

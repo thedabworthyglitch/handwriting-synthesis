@@ -1,80 +1,52 @@
 import numpy as np
 from handwriting_synthesis import Hand
+import random
+from textwrap import wrap
 
-all_star = """Somebody once told me the world is gonna roll me
-I ain't the sharpest tool in the shed
-She was looking kind of dumb with her finger and her thumb
-In the shape of an "L" on her forehead"""
+styles = []
+biases = []
+lines = []
 
-downtown = """Making my way downtown
-Walking fast
-Faces pass
-And I'm home-bound"""
+stbi = {
+    0: [.9,.7,1.0],
+    1: [.4,1.05],
+    3: [.65,.9],
+    4: [.9],
+    7: [.9],
+    8: [.9],
+    9: [.75,.8,.9,1.0,1.05],
+    12: [.75,.9,1],
+}
 
-give_up = """Never gonna give you up
-Never gonna let you down
-Never gonna run around and desert you
-Never gonna make you cry
-Never gonna say goodbye
-Never gonna tell a lie and hurt you"""
 
-lines = [
-    "Father time, I'm running late",
-    "I'm winding down, I'm growing tired",
-    "Seconds drift into the night",
-    "The clock just ticks till my time expires",
-]
+def splitter(text, max_length = 90):
+    lines = []
+    line = ""
+    for line in text.split("\n"):
+        wr = wrap(line, max_length)
+        if wr == []:
+            lines.append("")
+        else:
+            lines.extend(wr)
+    return lines
 
 if __name__ == '__main__':
     hand = Hand()
-
+    lines = splitter(open('towrite.txt').read())
     # usage demo
-    biases = [.75 for i in lines]
-    styles = [9 for i in lines]
-    stroke_colors = ['red', 'green', 'black', 'blue']
-    stroke_widths = [1, 2, 1, 2]
+    # stroke_widths = [random.choice([1,1.05,1.1,1.15,1.2,1.25,1.3,1.35,1.4,1.45,1.5])] * len(lines)
 
-    hand.write(
-        filename='img/usage_demo.svg',
-        lines=lines,
-        biases=biases,
-        styles=styles,
-        stroke_colors=stroke_colors,
-        stroke_widths=stroke_widths
-    )
-
-    # demo number 1 - fixed bias, fixed style
-    lines = all_star.split("\n")
-    biases = [.75 for i in lines]
-    styles = [12 for i in lines]
-
-    hand.write(
-        filename='img/all_star.svg',
-        lines=lines,
-        biases=biases,
-        styles=styles,
-    )
-
-    # demo number 2 - fixed bias, varying style
-    lines = downtown.split("\n")
-    biases = [.75 for i in lines]
-    styles = np.cumsum(np.array([len(i) for i in lines]) == 0).astype(int)
-
-    hand.write(
-        filename='img/downtown.svg',
-        lines=lines,
-        biases=biases,
-        styles=styles,
-    )
-
-    # demo number 3 - varying bias, fixed style
-    lines = give_up.split("\n")
-    biases = .2 * np.flip(np.cumsum([len(i) == 0 for i in lines]), 0)
-    styles = [7 for i in lines]
-
-    hand.write(
-        filename='img/give_up.svg',
-        lines=lines,
-        biases=biases,
-        styles=styles,
-    )
+    for i in stbi:
+        for j in stbi[i]:
+            print(f"==========================================================================================")
+            print(f"Style: {i}, Bias: {j}")
+            print(f"==========================================================================================")
+            stroke_width = random.choice([1,1.05,1.1,1.15,1.2,1.25,1.3,1.35,1.4,1.45,1.5])
+            hand.write(
+                filename=f'img/usage_demo_st{i}_bias{j}.svg',
+                lines=lines,
+                biases=[j] * len(lines),
+                styles=[i] * len(lines),
+                stroke_widths=[stroke_width + random.choice([-0.1, -0.05, 0, 0.05, 0.1]) for _ in range(len(lines))],
+                alignCenter=False
+            )

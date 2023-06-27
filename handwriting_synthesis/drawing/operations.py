@@ -21,7 +21,7 @@ alpha_to_num = defaultdict(int, list(map(reversed, enumerate(alphabet))))
 num_to_alpha = dict(enumerate(alphabet_ord))
 
 MAX_STROKE_LEN = 1200
-MAX_CHAR_LEN = 75
+MAX_CHAR_LEN = 90
 
 
 def align(coords):

@@ -37,15 +37,15 @@ class Hand(object):
         )
         self.nn.restore()
 
-    def write(self, filename, lines, biases=None, styles=None, stroke_colors=None, stroke_widths=None):
+    def write(self, filename, lines, biases=None, styles=None, stroke_colors=None, stroke_widths=None, alignCenter=True):
         valid_char_set = set(drawing.alphabet)
         for line_num, line in enumerate(lines):
-            if len(line) > 75:
+            if len(line) > drawing.MAX_CHAR_LEN:
                 raise ValueError(
                     (
-                        "Each line must be at most 75 characters. "
+                        "Each line must be at most {} characters. "
                         "Line {} contains {}"
-                    ).format(line_num, len(line))
+                    ).format(drawing.MAX_CHAR_LEN, line_num, len(line))
                 )
 
             for char in line:
@@ -58,7 +58,7 @@ class Hand(object):
                     )
 
         strokes = self._sample(lines, biases=biases, styles=styles)
-        _draw(strokes, lines, filename, stroke_colors=stroke_colors, stroke_widths=stroke_widths)
+        _draw(strokes, lines, filename, stroke_colors=stroke_colors, stroke_widths=stroke_widths, alignCenter=alignCenter)
 
     def _sample(self, lines, biases=None, styles=None):
         num_samples = len(lines)
