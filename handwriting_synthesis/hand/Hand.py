@@ -1,5 +1,6 @@
 import logging
 import os
+import random
 
 import numpy as np
 
@@ -47,15 +48,27 @@ class Hand(object):
                         "Line {} contains {}"
                     ).format(drawing.MAX_CHAR_LEN, line_num, len(line))
                 )
-
+            newLine = ""
             for char in line:
                 if char not in valid_char_set:
-                    raise ValueError(
-                        (
-                            "Invalid character {} detected in line {}. "
-                            "Valid character set is {}"
-                        ).format(char, line_num, valid_char_set)
-                    )
+                    if char == "_":
+                        newLine += "-"
+                    elif char == "Q":
+                        newLine += random.choice(["O", "q"])
+                    elif char == "X":
+                        newLine += random.choice(["x", "K"])
+                    elif char == "Z":
+                        newLine += random.choice(["z", "2"])
+                    else:
+                        raise ValueError(
+                            (
+                                "Invalid character {} detected in line {}. "
+                                "Valid character set is {}"
+                            ).format(char, line_num, valid_char_set)
+                        )
+                else:
+                    newLine += char
+            lines[line_num] = newLine
 
         strokes = self._sample(lines, biases=biases, styles=styles)
         _draw(strokes, lines, filename, stroke_colors=stroke_colors, stroke_widths=stroke_widths, alignCenter=alignCenter)

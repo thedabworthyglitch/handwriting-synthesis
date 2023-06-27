@@ -12,7 +12,6 @@ def _draw(strokes, lines, filename, stroke_colors=None, stroke_widths=None, alig
     line_height = 35
     view_width = 1000
     view_height = line_height * (len(strokes) + 1)
-
     dwg = svgwrite.Drawing(filename=filename)
     dwg.viewbox(width=view_width, height=view_height)
     dwg.add(dwg.rect(insert=(0, 0), size=(view_width, view_height), fill='white'))
@@ -34,7 +33,8 @@ def _draw(strokes, lines, filename, stroke_colors=None, stroke_widths=None, alig
         if alignCenter:
             strokes[:, 0] += (view_width - strokes[:, 0].max()) / 2
         else:
-            strokes[:, 0] += (view_width + random.randint(-15, 15) - strokes[:, 0].min())
+            pass
+            # strokes[:, 0] += (view_width + random.randint(-15, 15) - strokes[:, 0].min())
             # strokes[:, 0] += random.randint(10, 50)
 
         prev_eos = 1.0
