@@ -59,12 +59,29 @@ class Hand(object):
                         newLine += random.choice(["x", "K"])
                     elif char == "Z":
                         newLine += random.choice(["z", "2"])
+                    elif char == "+":
+                        newLine += "t"
+                    elif char == "=":
+                        newLine += "-"
+                    elif char == "*":
+                        newLine += "x"
+                    elif char == "/":
+                        newLine += random.choice(["I", "l"])
+                    elif char == "[" or char == "{":
+                        newLine += "("
+                    elif char == "]" or char == "}":
+                        newLine += ")"
+                    elif char == "<":
+                        newLine += random.choice(["c", "("])
+                    elif char == ">":
+                        newLine += ")"
                     else:
                         raise ValueError(
                             (
                                 "Invalid character {} detected in line {}. "
-                                "Valid character set is {}"
-                            ).format(char, line_num, valid_char_set)
+                                "Valid character set is {}.\n"
+                                "Line content: \"{}\""
+                            ).format(char, line_num, valid_char_set, line)
                         )
                 else:
                     newLine += char
