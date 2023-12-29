@@ -29,11 +29,11 @@ lines = []
 #     9: [random.choice([.75, .8, .9, 1.0, 1.05])],
 #     12: [random.choice([.75, .9, 1])],
 # }
-# stbi = {0: [0.7]}  # Chetali
-stbi = {1: [1.1]}  # Utkarsh
+stbi = {0: [0.7]}  # Chetali
+#stbi = {1: [0.9]}  # Utkarsh
 
 
-def splitter(text, max_length=90):
+def splitter(text, max_length=69):
     lines = []
     line = ""
     for line in text.split("\n"):
